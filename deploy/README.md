@@ -1,4 +1,4 @@
-# A Guide to deploy Once-For-All networks on Xilinx DPU
+# A Guide to Deploy Once-For-All Networks on Xilinx DPU
 
 ## Introduction
 This documentation is a detailed guide to quantize, compile, deploy, and measure the latency of Once-For-All Proxyless search space networks on Xilinx ZCU102 board running DPU. The successfully deployed models on Xilinx DPU are listed in the following table. 
