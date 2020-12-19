@@ -11,8 +11,9 @@ import torch.utils.data
 from torchvision import transforms, datasets
 
 from proxyless_nas.utils import AverageMeter, accuracy
-
 from proxyless_nas import model_zoo
+
+from pytorch2caffe.converter import pytorch2caffe_converter
 
 model_names = sorted(name for name in model_zoo.__dict__
                      if name.islower() and not name.startswith("__")
@@ -152,7 +153,21 @@ def eval():
     print('Loss:', losses.avg, '\t Top1:', top1.avg, '\t Top5:', top5.avg)
     print(f"FLOPs = {flops}" + "\n" + f"#params = {param}") 
 
-
+def export_caffe():
+    net = model_zoo.__dict__[args.arch](pretrained=True)
+    net_name = args.arch.replace('_', '')
+    caffe_result = 'caffe_nets'
+    if not osp.exists(caffe_result):
+        os.makedirs(caffe_result)
+    print(net)
+    t2c = pytorch2caffe_converter(net)
+    t2c.set_input(input_tensor, args.source, args.root, 1, args.dimension, args.dimension)
+    t2c.trans_net(net_name)
+    t2c.save_prototxt(os.path.join(caffe_result, net_name + '.prototxt'))
+    t2c.save_caffemodel(os.path.join(caffe_result, net_name + '.caffemodel'))
+    print('generated caffe model : ' + net_name)
+    
 
 if __name__ == '__main__':
-    eval()
+    # eval()
+    export_caffe()
