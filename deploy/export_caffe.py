@@ -169,5 +169,5 @@ def export_caffe():
     
 
 if __name__ == '__main__':
-    # eval()
+    eval()
     export_caffe()
